@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useAuth } from '@/lib/auth';
-import { Menu, User, LogOut, Calendar, MapPin, Home } from 'lucide-react';
+import { Menu, User, LogOut, Calendar, MapPin, Home, LayoutDashboard } from 'lucide-react';
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,10 +13,22 @@ export const Navbar = () => {
 
   const isActive = (path: string) => location.pathname === path;
 
+  const dashboardPath =
+    user?.role === 'admin'
+      ? '/dashboard/admin'
+      : user?.role === 'facility_owner'
+      ? '/dashboard/facility'
+      : '/dashboard/user';
+
   const navItems = [
     { path: '/', label: 'Home', icon: Home },
     { path: '/venues', label: 'Venues', icon: MapPin },
-    ...(user ? [{ path: '/bookings', label: 'My Bookings', icon: Calendar }] : []),
+    ...(user
+      ? [
+          { path: dashboardPath, label: 'Dashboard', icon: LayoutDashboard },
+          { path: '/bookings', label: 'My Bookings', icon: Calendar },
+        ]
+      : []),
   ];
 
   return (
